@@ -1,0 +1,25 @@
+ligne de commande SYMFONY
+
+pr crée 1 projet:
+composer create-project symfony/website-skeleton demo
+
+pr demarrer le serveur xxampp:
+php -S 127.0.0.1:8000 -t public
+
+pr crée 1 controller(page):
+php bin/console make:controller 
+
+pr crée 1 BDD:
+php bin/console doctrine:database:create
+
+pr faire le schema(la représentation) d1 table:
+php bin/console make:entity
+
+pr l envoyer en BDD (mettre à jour la BDD)
+php bin/console d:s:u -f
+
+pr crée 1 table utilisateur:
+ php bin/console make:user 
+
+pr crée 1 formulaire:
+php bin/console make:form
