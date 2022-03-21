@@ -18,7 +18,7 @@ class HomeController extends AbstractController
     /**
      * @Route("/", name="app_home") 
      */
-    public function index(Request $request): Response
+    public function index(Request $request): Response 
     {
         //logique stocker dns 1 variable avc tt ls articles
         $articles = $this->manager->getRepository(Article::class)->findAll();  

@@ -5,9 +5,9 @@
 {% block body %}
 <h1>Page d accueil</h1>
 
-<section class="container m-5">
+<section class="container m-5"> 
     <div class="row"> 
-        {% for article in articles %}
+        {% for article in articles %} 
             <div class="card col-md-3 m-2" style="width: 18rem;"> 
                 <div class="card-body">
                     <img src="{{article.photo}}" alt="">
@@ -16,10 +16,11 @@
                     <a href="#" class="btn btn-primary">{{article.auteur}}</a> <br>
                     <span>{{article.publication | date('d-M-y')}}</span> <br>
                      <!--pr utiliser le btn supprimer j utilise la fonction path  -->
-                    <a href="{{path('app_article_delete',{id:article.id})}}" class="btn btn-danger">Supprimer</a>      
+                    <a href="{{path('app_article_delete',{id:article.id})}}" class="btn btn-danger">Supprimer</a> <br> 
+                    <a href="{{path('app_article_edit',{id:article.id})}}" class="btn btn-warning">Modifier</a> 
                 </div>      
             </div> 
-        {% endfor %}
+        {% endfor %} 
     </div>
 </section>
 {% endblock %} 

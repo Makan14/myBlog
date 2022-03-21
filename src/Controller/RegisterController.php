@@ -33,7 +33,7 @@ class RegisterController extends AbstractController
             $this->manager->flush(); //on flush 
             // avec pesist et flush j envoi le resultat de mn formulaire en BDD
 
-            dd($form->getData()); //pr vérifier ce que j ai dns mon formulaire 
+            // dd($form->getData()); //pr vérifier ce que j ai dns mon formulaire 
         } 
 
 

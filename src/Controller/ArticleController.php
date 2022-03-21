@@ -49,4 +49,26 @@ class ArticleController extends AbstractController
         return $this->redirectToRoute('app_home'); 
 
     }
+
+    /**
+     * @Route("/article/edit/{id}", name="app_article_edit")
+     */
+    public function articleEdit(Article $article, Request $request): Response
+    {
+        $form = $this->createForm(ArticleType::class, $article); 
+        $form->handleRequest($request); 
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->manager->persist($article); 
+            $this->manager->flush(); 
+            return $this->redirectToRoute('app_home'); 
+
+            // dd($form->getData()); 
+        };
+
+        return $this->render('article/editArticle.html.twig', [
+
+            'formArticle' => $form->createView() 
+        ]);
+
+    }
 }
