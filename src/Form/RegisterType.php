@@ -20,8 +20,8 @@ class RegisterType extends AbstractType
         $builder
             ->add('nom', TextType::class) 
             ->add('prenom', TextType::class) 
-            // j ajoute les type Email et Password 
             ->add('datedeNaissance', BirthdayType::class) 
+            // j ajoute les type Email et Password 
             ->add('email', EmailType::class) 
             ->add('password', PasswordType::class)
             ->add('submit', SubmitType::class) 

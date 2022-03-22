@@ -8,13 +8,16 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasher;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class RegisterController extends AbstractController
 {
-    public function __construct(EntityManagerInterface $manager){
+    public function __construct(EntityManagerInterface $manager, UserPasswordHasherInterface $passwordHash){
 
         $this->manager = $manager; 
+        $this->passwordHash = $passwordHash; 
     }
     
         
@@ -29,13 +32,15 @@ class RegisterController extends AbstractController
         $form = $this->createForm(RegisterType::class, $user); //création du formulaire sur la base de la class RegisterType 
         $form->handleRequest($request); //traitement du formulaire, handleRequest recup les données du formulaire (email, password) dns RegisterType.php
         if($form->isSubmitted() && $form->isValid()){ //si le formulaire et soumis et validé alors...
-            $this->manager->persist($user); //persist prépare l envoi des données
+
+            $passEncode = $this->passwordHash->hashPassword($user, $user->getPassword()); //Hashage du mot de passe
+            $user->setPassword($passEncode);
+            $this->manager->persist($user); //persist prépare l envoi des données 
             $this->manager->flush(); //on flush 
             // avec pesist et flush j envoi le resultat de mn formulaire en BDD
 
             // dd($form->getData()); //pr vérifier ce que j ai dns mon formulaire 
         } 
-
 
         return $this->render('register/index.html.twig', [
 

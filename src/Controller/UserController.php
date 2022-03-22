@@ -26,7 +26,6 @@ class UserController extends AbstractController
 
         $users = $this->manager->getRepository(User::class)->findAll();  
 
-
         return $this->render('user/index.html.twig', [
             'users' => $users, 
         ]);
@@ -35,7 +34,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/user/delete/{id}", name="app_user_delete")
+     * @Route("/admin/user/delete/{id}", name="app_user_delete")
      */
     public function userDelete(User $user): Response 
     {
@@ -49,11 +48,11 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/user/edit/{id}", name="app_user_edit")
+     * @Route("/admin/user/edit/{id}", name="app_user_edit")
      */
     public function userEdit(User $user, Request $request): Response
     {
-        $form = $this->createForm(User::class, $user); 
+        $form = $this->createForm(RegisterType::class, $user); 
         $form->handleRequest($request); 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->manager->persist($user); 
@@ -64,7 +63,7 @@ class UserController extends AbstractController
         };
 
         return $this->render('user/editUser.html.twig', [
-            'formUser' => $form->createView() 
+            'form' => $form->createView() 
         ]);
 
     }

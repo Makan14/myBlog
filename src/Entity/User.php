@@ -45,6 +45,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $prenom;
 
+    // $nomComplet n est pas lier à la BDD donc pas de setter tt en bas
+    private $nomComplet;
+
     /**
      * @ORM\Column(type="datetime")
      */
@@ -154,6 +157,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getPrenom(): ?string
     {
         return $this->prenom;
+    }
+
+    // je crée ma propre méthode
+    public function getNomComplet(): ?string{
+        return $this->getNom(). ' ' . $this->getPrenom();
     }
 
     public function setPrenom(string $prenom): self

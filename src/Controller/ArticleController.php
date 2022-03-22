@@ -26,7 +26,11 @@ class ArticleController extends AbstractController
         $form = $this->createForm(ArticleType::class, $article);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->manager->persist($article);
+             
+            $article->setAuteur($this->getUser()->getNomComplet()); 
+             
+            
+            $this->manager->persist($article); 
             $this->manager->flush($article);
 
             // dd($form->getData()); 
