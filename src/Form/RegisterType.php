@@ -13,18 +13,30 @@ use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 
-class RegisterType extends AbstractType
+class RegisterType extends AbstractType 
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+        // j ajoute chaque type à coter des champs 
             ->add('nom', TextType::class) 
             ->add('prenom', TextType::class) 
-            ->add('datedeNaissance', BirthdayType::class) 
-            // j ajoute les type Email et Password 
+            ->add('datedeNaissance', BirthdayType::class, [
+                'label' => 'Date de naissance',
+                'widget' => 'single_text', //pr changer le format du champ de la date 
+            ]) 
             ->add('email', EmailType::class) 
-            ->add('password', PasswordType::class)
-            ->add('submit', SubmitType::class) 
+            ->add('password', PasswordType::class, [
+                'label' => 'mot de passe', // pr changer les noms des champs
+                'mapped' => false, //pr dire qu'il n est pas obligatoire de renvoyer en BDD
+                'attr' =>[
+                    'placeholder' => 'Mot de passe', 
+                    'class' => 'champ password'
+                ]
+            ])
+            ->add('submit', SubmitType::class, [
+                'label' => 'S\'inscrire' 
+            ]) 
         ;
     }
 

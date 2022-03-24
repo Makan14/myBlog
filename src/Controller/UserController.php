@@ -55,6 +55,17 @@ class UserController extends AbstractController
         $form = $this->createForm(RegisterType::class, $user); 
         $form->handleRequest($request); 
         if ($form->isSubmitted() && $form->isValid()) {
+            $emptyPassword = $form->get('password')->getData();//recup le champ password;
+            // qund le formulaire et soumis verifier le champ password
+            // si il et vide alors ont recup le mdp de l utilisateur à modif et on le renvoi
+
+            if ($emptyPassword == null) {
+                // recup le mdp utilisateur en BDD et le renvoyer 
+                $user->setPassword($user->getPassword());  
+                // setPassword envoi en BDD / getPassword recup en BDD 
+
+            }
+
             $this->manager->persist($user); 
             $this->manager->flush(); 
             return $this->redirectToRoute('app_user'); 

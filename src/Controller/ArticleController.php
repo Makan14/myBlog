@@ -15,8 +15,23 @@ class ArticleController extends AbstractController
     public function __construct(EntityManagerInterface $manager){
 
         $this->manager = $manager; 
-    } 
+    }
+    
+    /**
+     * @Route("/all/article", name="app_all_article") 
+     */
+    public function allArticle(): Response 
+    {
+        //logique stocker dns 1 variable avc tt ls articles
+        $articles = $this->manager->getRepository(Article::class)->findAll();  
 
+        // dd($articles);
+
+        return $this->render('article/allArticle.html.twig', [
+            'articles' => $articles, 
+        ]);  
+    
+    }
     /**
      * @Route("/article", name="app_article")
      */
@@ -28,8 +43,7 @@ class ArticleController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
              
             $article->setAuteur($this->getUser()->getNomComplet()); 
-             
-            
+                        
             $this->manager->persist($article); 
             $this->manager->flush($article);
 

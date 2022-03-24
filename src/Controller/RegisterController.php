@@ -32,14 +32,25 @@ class RegisterController extends AbstractController
         $form = $this->createForm(RegisterType::class, $user); //création du formulaire sur la base de la class RegisterType 
         $form->handleRequest($request); //traitement du formulaire, handleRequest recup les données du formulaire (email, password) dns RegisterType.php
         if($form->isSubmitted() && $form->isValid()){ //si le formulaire et soumis et validé alors...
-
-            $passEncode = $this->passwordHash->hashPassword($user, $user->getPassword()); //Hashage du mot de passe
-            $user->setPassword($passEncode);
+         
+            $emptyPassword = $form->get('password')->getData(); 
+            
+            if ($emptyPassword == null) {
+                // recup le mdp utilisateur en BDD et le renvoyer 
+                $user->setPassword($user->getPassword());  
+                // setPassword envoi en BDD / getPassword recup en BDD                
+            }else {
+                $passewordEncod = $this->passwordHash->hashPassword($user , $emptyPassword);
+                $user->setPassword($passewordEncod); 
+            }
+            
             $this->manager->persist($user); //persist prépare l envoi des données 
             $this->manager->flush(); //on flush 
-            // avec pesist et flush j envoi le resultat de mn formulaire en BDD
+            // avec persist et flush j envoi le resultat de mn formulaire en BDD
 
-            // dd($form->getData()); //pr vérifier ce que j ai dns mon formulaire 
+            // pr retourner sur la page login apres s etre inscrit
+            return $this->redirectToRoute('app_login'); 
+             
         } 
 
         return $this->render('register/index.html.twig', [
