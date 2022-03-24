@@ -7,13 +7,16 @@
 
     <div class="container">
         <h2 class="text-center">Bonjour {{app.user.nomComplet}}</h2> 
+
         <hr>
+
         {% if is_granted("ROLE_ADMIN") %}
         <a href="{{path('app_user')}}">Voir les utilisateurs du site</a> <br>
         <a href="{{path('app_all_article')}}">Voir les articles du site</a> <br>
-        {% endif %}
         <a href="">Voir les commentaires du site</a> <br> 
-        <a href="{{path('app_profil')}}">Editer mon profil</a>   
+        {% endif %} 
+
+        <a href="{{path('app_user_edit', {id: app.user.id})}}">Editer mon profil</a>   
     </div> 
      
     

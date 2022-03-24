@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Article;
 use App\Form\ArticleType;
+use App\Entity\Commentaire;
+use App\Form\CommentaireType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,7 +20,7 @@ class ArticleController extends AbstractController
     }
     
     /**
-     * @Route("/all/article", name="app_all_article") 
+     * @Route("/admin/all/article", name="app_all_article") 
      */
     public function allArticle(): Response 
     {
@@ -32,6 +34,7 @@ class ArticleController extends AbstractController
         ]);  
     
     }
+
     /**
      * @Route("/article", name="app_article")
      */
@@ -88,5 +91,34 @@ class ArticleController extends AbstractController
             'formArticle' => $form->createView() 
         ]);
 
+    }
+
+      /**
+     * @Route("/single/article/{id}", name="app_view_article") 
+     */
+    public function singleArticle(Article $article, Request $request): Response 
+    {
+        $commentaire = new Commentaire();
+        $form = $this->createForm(CommentaireType::class, $commentaire); 
+        $form->handleRequest($request); 
+        if ($form->isSubmitted() && $form->isValid()) { 
+            // j envoi la date l auteur et l utilisateur en BDD 
+            $commentaire->setDate(new \DateTime()); 
+            $commentaire->setAuteur($this->getUser()); 
+            $commentaire->setArticle($article);
+            $this->manager->persist($commentaire); 
+            $this->manager->flush(); 
+            return $this->redirectToRoute('app_view_article', [
+                'id' => $article->getId(),
+            ]); 
+
+            // dd($form->getData()); 
+        };
+
+        return $this->render('article/singleArticle.html.twig', [
+            'article' => $article,
+            'form'=>$form->createView() 
+        ]);  
+    
     }
 }

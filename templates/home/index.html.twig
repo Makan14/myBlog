@@ -1,52 +1,59 @@
+
 {% extends 'base.html.twig' %}
 
-{% block title %}Page d'accueil{% endblock %}
+{% block title %}Accueil{% endblock %}
 
 {% block body %}
+<body>
+  <!-- Header-->
+  <header class="bg-dark py-5">
+      <div class="container px-4 px-lg-5 my-5">
+          <div class="text-center text-white">
+              <h1 class="display-4 fw-bolder">Shop in style</h1>
+              <p class="lead fw-normal text-white-50 mb-0">With this shop hompeage template</p>
+          </div>
+      </div>
+  </header>
+  <!-- Section-->
+  <section class="py-5">
+      <div class="container px-4 px-lg-5 mt-5">
+          <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+            {% for article in articles %}
+              <div class="col mb-5">
+                  <div class="card h-100">
+                      <!-- Product image-->
+                      <img style="width:150;" src="{{article.photo}}">
+                      <!-- Product details-->
+                      <div class="card-body p-4">
+                          <div class="text-center">
+                              <!-- Product name-->
+                              <h5 class="fw-bolder">{{article.titre}}</h5>
+                              <!-- Product price-->
+                              {{article.publication | date('d-M-y')}}
+                          </div>
+                      </div>
+                      <!-- Product actions-->
+                      <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                          <div class="text-center">
+                            {% if is_granted ("ROLE_ADMIN")  %}
+                            <a href="{{path('app_article_delete',{id: article.id})}}"class="text-danger">Supprimer</a><br>
+                            <a href="{{path('app_article_edit',{id: article.id})}}"class="text-warning">Modifier</a>
+                               {% endif %}
+                               <br>
+                            <a href="{{path('app_view_article',{id: article.id})}}"class="text-success">Voir</a>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+            {% endfor %}
+          </div>
+      </div>
+  </section>
+  <!-- Footer-->
+  <footer class="py-5 bg-dark">
+      <div class="container"><p class="m-0 text-center text-white">Copyright © Your Website 2022</p></div>
+  </footer>
 
-<div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
-  <div class="carousel-inner">
-    <div class="carousel-item active">
-      <img src="https://www.referenseo.com/wp-content/uploads/2019/03/image-attractive-960x540.jpg" class="d-block w-100" alt="...">
-    </div>
-    <div class="carousel-item">
-      <img src="https://img-19.commentcamarche.net/cI8qqj-finfDcmx6jMK6Vr-krEw=/1500x/smart/b829396acc244fd484c5ddcdcb2b08f3/ccmcms-commentcamarche/20494859.jpg" class="d-block w-100" alt="...">
-    </div>
-    <div class="carousel-item">
-      <img src="https://static.addtoany.com/images/dracaena-cinnabari.jpg" class="d-block w-100" alt="...">
-    </div>
-  </div>
-  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
-    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Previous</span>
-  </button>
-  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Next</span>
-  </button>
-</div>
+{% endblock %}
 
-<h1>Page d accueil</h1>
 
-<section class="container m-5"> 
-    <div class="row"> 
-        {% for article in articles %} 
-            <div class="card col-md-3 m-2" style="width: 18rem;"> 
-                <div class="card-body">
-                    <img src="{{article.photo}}" style="width: 15rem;" alt="">
-                    <h5 class="card-title">{{article.titre}}</h5>
-                    <p class="card-text">{{article.description}}</p>
-                    <a href="#" class="btn btn-primary">{{article.auteur}}</a> <br>
-                    <span>{{article.publication | date('d-M-y')}}</span> <br>
-                     <!--pr utiliser le btn supprimer j utilise la fonction path  -->
-                     {# donner l acces uniquement à ladmin pr supp et modifier #}
-                    {% if is_granted("ROLE_ADMIN") %} 
-                    <a href="{{path('app_article_delete',{id:article.id})}}" class="btn btn-danger">Supprimer</a> <br> 
-                    <a href="{{path('app_article_edit',{id:article.id})}}" class="btn btn-warning">Modifier</a> 
-                    {% endif %} 
-                </div>      
-            </div> 
-        {% endfor %} 
-    </div>
-</section>
-{% endblock %} 

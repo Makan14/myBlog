@@ -42,13 +42,13 @@ class UserController extends AbstractController
         // $users = $this->manager->getRepository(User::class)->findAll();   
         $this->manager->remove($user); 
         $this->manager->flush();  
-        return $this->redirectToRoute('app_user');
+        return $this->redirectToRoute('app_user'); 
 
 
     }
 
     /**
-     * @Route("/admin/user/edit/{id}", name="app_user_edit")
+     * @Route("/user/edit/{id}", name="app_user_edit")
      */
     public function userEdit(User $user, Request $request): Response
     {
