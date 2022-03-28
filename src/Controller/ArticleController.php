@@ -10,7 +10,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 class ArticleController extends AbstractController
 {
@@ -38,15 +40,34 @@ class ArticleController extends AbstractController
     /**
      * @Route("/article", name="app_article")
      */
-    public function index(Request $request): Response
+    public function index(Request $request, SluggerInterface $slugger): Response
     {
         $article = new Article(); //nvl instance de article 
         $form = $this->createForm(ArticleType::class, $article);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-             
+            $photoArticle = $form->get('photo')->getData();
+       
+            if($photoArticle){
+           $originalFilename = pathinfo($photoArticle->getClientOriginalName(),PATHINFO_FILENAME);
+           $safeFilename = $slugger->slug($originalFilename);
+           $newFilename = $safeFilename.'-'.uniqid().'.'.$photoArticle->guessExtension();
+             try {
+                $photoArticle->move(
+                    $this->getParameter('photo'),
+                    $newFilename
+                );
+             }catch (FileException $e){
+
+             }
+              $article->setPhoto($newFilename);
+            }else{
+                dd('aucune photo disponible');
+            }
+
             $article->setAuteur($this->getUser()->getNomComplet()); 
-                        
+            $article->setPublication(new \datetime); //pr send automatiquement la date d'aujourd hui
+            
             $this->manager->persist($article); 
             $this->manager->flush($article);
 
@@ -74,11 +95,31 @@ class ArticleController extends AbstractController
     /**
      * @Route("/article/edit/{id}", name="app_article_edit")
      */
-    public function articleEdit(Article $article, Request $request): Response
+    public function articleEdit(Article $article, Request $request): Response 
     {
         $form = $this->createForm(ArticleType::class, $article); 
         $form->handleRequest($request); 
         if ($form->isSubmitted() && $form->isValid()) {
+            $photoArticle = $form->get('photo')->getData();
+       
+            if($photoArticle){
+           $originalFilename = pathinfo($photoArticle->getClientOriginalName(),PATHINFO_FILENAME);
+           $safeFilename = $slugger->slug($originalFilename);
+           $newFilename = $safeFilename.'-'.uniqid().'.'.$photoArticle->guessExtension();
+             try {
+                $photoArticle->move(
+                    $this->getParameter('photo'), 
+                    $newFilename
+                );
+             }catch (FileException $e){
+
+             }
+              $article->setPhoto($newFilename);
+            }else{
+                dd('aucune photo disponible');
+            }
+
+            $article->setPublication(new \datetime); //pr send automatiquement la date d'aujourd hui
             $this->manager->persist($article); 
             $this->manager->flush(); 
             return $this->redirectToRoute('app_home'); 
@@ -102,6 +143,7 @@ class ArticleController extends AbstractController
         $form = $this->createForm(CommentaireType::class, $commentaire); 
         $form->handleRequest($request); 
         if ($form->isSubmitted() && $form->isValid()) { 
+
             // j envoi la date l auteur et l utilisateur en BDD 
             $commentaire->setDate(new \DateTime()); 
             $commentaire->setAuteur($this->getUser()); 

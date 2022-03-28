@@ -19,8 +19,10 @@ class ArticleType extends AbstractType
         $builder
             ->add('titre', TextType::class)
             ->add('description', TextareaType::class) 
-            ->add('photo', TextType::class)
-            ->add('publication', DateType::class)
+            ->add('photo', FileType::class,[
+                'data_class' => null,
+            ])
+            
             ->add('submit', SubmitType::class) 
         ;
     }
